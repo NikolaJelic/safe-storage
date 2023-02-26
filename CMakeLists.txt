@@ -3,4 +3,4 @@ project(safe_storage)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(safe_storage main.cpp user.cpp user.h openssl.cpp openssl.h vault.cpp vault.h)
+add_executable(safe_storage src/main.cpp src/user.cpp src/user.h src/openssl.cpp src/openssl.h src/vault.cpp src/vault.h)
