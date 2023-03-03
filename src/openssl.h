@@ -23,5 +23,6 @@ public:
     std::filesystem::path generate_certificate(User const &user, std::filesystem::path const &target_dir);
 
 private:
+    /// return the contents of the given file and then delete it
     std::string return_output(std::string input) const;
 };

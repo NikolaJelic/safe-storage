@@ -18,7 +18,7 @@ class Vault {
     std::filesystem::path ca_cert{};
     ///Path to the user directory with all the user details
     std::filesystem::path usr_dir{};
-
+    Openssl openssl;
     User current_user;
 
      const size_t min_directory_count = 4;
@@ -62,5 +62,8 @@ private:
     /// encrypt fragment
     //fragment will need to be stored in a temp file before encryption and then deleted after it is finished
     std::fstream encrypt_fragment();
+
+    std::size_t  get_file_size(std::fstream & file_reader);
+    std::size_t get_random_in_range(std::size_t min, std::size_t max);
 
 };
