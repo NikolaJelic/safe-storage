@@ -46,10 +46,10 @@ public:
     std::filesystem::path get_file(std::string const &filename);
 
     /// upload file to vault
-    bool upload_file(std::filesystem::path const file_path);
+    bool upload_file(std::filesystem::path const& file_path);
 
     ///delete file from vault and config files
-    bool delete_file(std::string const &filename);
+    void delete_file(std::string const &filename);
 
 
 private:
@@ -63,7 +63,7 @@ private:
     //fragment will need to be stored in a temp file before encryption and then deleted after it is finished
     std::fstream encrypt_fragment();
 
-    std::size_t  get_file_size(std::fstream & file_reader);
+
     std::size_t get_random_in_range(std::size_t min, std::size_t max);
 
 };

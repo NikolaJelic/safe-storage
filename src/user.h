@@ -33,6 +33,7 @@ public:
 
     bool validate_credentials(std::string const& username, std::string const& password);
 
+	std::vector<std::filesystem::path> get_file_segments(const std::string& filename)const;
 private:
     std::map<std::string, std::vector<std::filesystem::path>> file_index{};
     std::filesystem::path config_file{};

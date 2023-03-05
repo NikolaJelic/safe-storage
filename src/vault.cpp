@@ -21,13 +21,15 @@ Vault::locate_directory(const std::filesystem::path &target_dir, const std::file
     return {};
 }
 
-bool Vault::upload_file(const std::filesystem::path file_path) {
+bool Vault::upload_file(const std::filesystem::path const& file_path) {
+	std::vector<std::filesystem::path> segment_paths{};
     std::fstream file_reader{file_path, std::fstream::in};
     if (!file_reader.is_open()) {
         std::cerr << "Temp file couldn't be opened\n";
+		return false;
     } else {
         /// get file name
-        std::string file_name = file_path.stem();
+        std::string file_name = file_path.stem().string();
 
         /// get file contents to string
         std::stringstream temp_stream ;
@@ -45,15 +47,18 @@ bool Vault::upload_file(const std::filesystem::path file_path) {
             if (!is_directory(dest_dir)) {
                 std::filesystem::create_directory(dest_dir);
             }
-            std::ofstream segment{dest_dir.concat(segment_name)};
+            std::ofstream segment{dest_dir / segment_name};
             if(!segment.is_open()){
                 std::cerr << "Segment couldn't be generated\n";
             }else{
                     segment << buffer.substr(pos, segment_size);
                     // TODO encrypt and sign segment
                     pos += segment_size;
+					segment_paths.push_back(dest_dir / segment_name);
             }
         }
+		current_user.add_file(file_name, segment_paths);
+		return true;
     }
 }
 
@@ -65,5 +70,25 @@ std::size_t Vault::get_random_in_range(std::size_t min, std::size_t max) {
     return dist(eng);
 }
 
+void Vault::delete_file(const std::string& filename) {
+	current_user.delete_file(filename);
+}
 
+std::filesystem::path Vault::get_file(const std::string& filename) {
+	std::vector<std::filesystem::path> segment_paths = current_user.get_file_segments(filename);
 
+	std::ofstream file{"./"+filename};
+	if(!file.is_open()){
+		std::cerr << "Segment couldn't be generated\n";
+	}else{
+		for(auto const& path : segment_paths){
+			std::ifstream segment{path};
+			if(!segment.is_open()){
+					std::cerr << "File segment couldn't be opened\n";
+			}else{
+					file << segment.rdbuf();
+			}
+		}
+	}
+
+}

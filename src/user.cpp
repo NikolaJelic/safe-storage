@@ -68,8 +68,8 @@ bool User::validate_credentials(const std::string &username, const std::string &
     return (this->username == username && openssl.hash_string(password) == this->password);
 }
 
-void User::add_file(const std::string &filename, const std::vector<std::filesystem::path> &pahts) {
-    file_index.emplace(filename, pahts);
+void User::add_file(const std::string &filename, const std::vector<std::filesystem::path> &paths) {
+    file_index.emplace(filename, paths);
     generate_config_file(config_file);
 }
 
@@ -84,4 +84,12 @@ std::vector<std::string> User::list_files() const {
         ret.push_back(key);
     }
     return ret;
+}
+std::vector<std::filesystem::path> User::get_file_segments(const std::string& filename) const {
+	for(auto const& [file, segments] : file_index){
+		if(file == filename){
+			return segments;
+		}
+	}
+	return {};
 }
